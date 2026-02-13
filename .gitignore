@@ -1,0 +1,29 @@
+# Build directories
+build/
+out/
+
+# IDE files
+.vs/
+.vscode/
+*.user
+CMakeUserPresets.json
+
+# Cache files
+*.cache
+
+# Compiled objects
+*.o
+*.obj
+*.exe
+*.dll
+*.so
+*.a
+*.lib
+
+# CMake generated
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+compile_commands.json
+CTestTestfile.cmake
+Testing/

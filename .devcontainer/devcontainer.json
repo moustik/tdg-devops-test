@@ -1,0 +1,4 @@
+{
+    "name": "TDG DevOps Test (WSL)",
+    "image": "docker.io/library/ubuntu:22.04"
+}

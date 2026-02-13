@@ -29,9 +29,13 @@ int Calculator::factorial(int n) const {
     if (n <= 1) {
         return 1;
     }
+#ifdef FIX_FACTORIAL_BUG
+    return n * factorial(n - 1);
+#else
     // BUG: intentionally returns n * factorial(n-2) instead of n * factorial(n-1)
     // This will cause the factorial test to fail for values > 2
     return n * factorial(n - 2);
+#endif
 }
 
 } // namespace tdg

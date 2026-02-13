@@ -33,6 +33,9 @@ cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTS=ON
 cmake --build build
 ```
 
+## Hint : fix the factorial function
+A preprocessor variable FIX_FACTORIAL_BUG can be used to fix the factorial function computation. cf [Calculator.cpp](src/lib/calculator.cpp) to see how it's used.
+
 ## Run Tests
 
 ```bash

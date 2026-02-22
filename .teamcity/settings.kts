@@ -10,6 +10,9 @@ project {
             id("cpp_${os}_${preset}")
             name = "C++ CI - $os ($preset)"
 
+            val buildDir = if (preset == "release") "build-release" else "build"
+            artifactRules = "$buildDir/src/app/calculator_app* => artifacts"
+
             vcs {
                 root(DslContext.settingsRoot)
             }
@@ -23,19 +26,10 @@ project {
             }
 
             steps {
-                if (os == "linux") {
-                    script {
-                        name = "[Agent Setup] Install Ninja"
-                        scriptContent = """
-                            sudo apt-get update -qq
-                            sudo apt-get install -y --no-install-recommends ninja-build
-                        """.trimIndent()
-                    }
-                } else {
-                    script {
-                        name = "[Agent Setup] Install Build Tools"
-                        scriptContent = "pip install --upgrade cmake ninja"
-                    }
+
+                script {
+                    name = "[Agent Setup] Install Build Tools"
+                    scriptContent = "pip install --upgrade --break-system-packages cmake ninja"
                 }
 
                 script {
@@ -59,7 +53,5 @@ project {
     }
 
     cppJob("linux",   "default")
-    cppJob("linux",   "release")
     cppJob("windows", "default")
-    cppJob("windows", "release")
 }

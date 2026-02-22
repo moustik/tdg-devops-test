@@ -1,6 +1,7 @@
 import jetbrains.buildServer.configs.kotlin.*
 import jetbrains.buildServer.configs.kotlin.buildFeatures.XmlReport
 import jetbrains.buildServer.configs.kotlin.buildFeatures.xmlReport
+import jetbrains.buildServer.configs.kotlin.buildFeatures.buildCache
 import jetbrains.buildServer.configs.kotlin.buildSteps.script
 import jetbrains.buildServer.configs.kotlin.triggers.vcs
 
@@ -66,8 +67,19 @@ project {
                 }
             }
 
-            if (preset == "default") {
-                features {
+            features {
+                // Cache the build directory (compiled objects + GoogleTest _deps/) per branch.
+                // TC automatically scopes the cache by branch, so main and feature branches
+                // are isolated. publishOnlyChanged avoids redundant uploads on cache hits.
+                buildCache {
+                    name = "cmake-${os}-${preset}"
+                    use = true
+                    publish = true
+                    publishOnlyChanged = true
+                    rules = buildDir
+                }
+
+                if (preset == "default") {
                     xmlReport {
                         reportType = XmlReport.XmlReportType.JUNIT
                         rules = "$buildDir/ctest-results/results.xml"

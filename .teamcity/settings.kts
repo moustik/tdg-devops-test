@@ -1,4 +1,6 @@
 import jetbrains.buildServer.configs.kotlin.*
+import jetbrains.buildServer.configs.kotlin.buildFeatures.XmlReport
+import jetbrains.buildServer.configs.kotlin.buildFeatures.xmlReport
 import jetbrains.buildServer.configs.kotlin.buildSteps.script
 import jetbrains.buildServer.configs.kotlin.triggers.vcs
 
@@ -26,10 +28,20 @@ project {
             }
 
             steps {
-
-                script {
-                    name = "[Agent Setup] Install Build Tools"
-                    scriptContent = "pip install --upgrade --break-system-packages cmake ninja"
+                if (os == "linux") {  
+                    // Ninja is a system package so cmake won't allow install
+                    script {
+                        name = "[Agent Setup] Install Ninja"
+                        scriptContent = """
+                            sudo apt-get update -qq
+                            sudo apt-get install -y --no-install-recommends ninja-build
+                        """.trimIndent()
+                    }
+                } else {
+                    script {
+                        name = "[Agent Setup] Install Build Tools"
+                        scriptContent = "pip install --upgrade cmake ninja"
+                    }
                 }
 
                 script {
@@ -46,6 +58,15 @@ project {
                     script {
                         name = "Test"
                         scriptContent = "ctest --preset $preset --output-junit ctest-results/results.xml"
+                    }
+                }
+            }
+
+            if (preset == "default") {
+                features {
+                    xmlReport {
+                        reportType = XmlReport.XmlReportType.JUNIT
+                        rules = "$buildDir/ctest-results/results.xml"
                     }
                 }
             }

@@ -33,6 +33,25 @@ project {
             }
 
             steps {
+                // On the default branch (main), discard any restored build cache so every
+                // build is a clean, authoritative compile. Feature branches keep the cache.
+                script {
+                    name = "[Cache] Discard on default branch"
+                    scriptContent = if (os == "linux") {
+                        """
+                        if [ "%teamcity.build.branch.is_default%" = "true" ]; then
+                            rm -rf $buildDir
+                        fi
+                        """.trimIndent()
+                    } else {
+                        """
+                        if "%teamcity.build.branch.is_default%"=="true" (
+                            if exist $buildDir rmdir /s /q $buildDir
+                        )
+                        """.trimIndent()
+                    }
+                }
+
                 if (os == "linux") {  
                     // Ninja is a system package so cmake won't allow install
                     script {

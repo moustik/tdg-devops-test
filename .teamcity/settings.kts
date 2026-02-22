@@ -52,7 +52,7 @@ project {
                     }
                 }
 
-                if (os == "linux") {  
+                if (os == "linux") {
                     // Ninja is a system package so cmake won't allow install
                     script {
                         name = "[Agent Setup] Install Ninja"
@@ -110,4 +110,6 @@ project {
 
     cppJob("linux",   "default")
     cppJob("windows", "default")
+    cppJob("linux",   "fixed")
+    cppJob("windows", "fixed")
 }

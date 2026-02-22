@@ -13,7 +13,11 @@ project {
             name = "C++ CI - $os ($preset)"
 
             val buildDir = if (preset == "release") "build-release" else "build"
-            artifactRules = "$buildDir/src/app/calculator_app* => artifacts"
+            artifactRules = """
+                $buildDir/src/app/calculator_app* => artifacts
+                $buildDir/src/lib/libcalculator.a => artifacts
+                $buildDir/src/lib/calculator.lib => artifacts
+            """.trimIndent()
 
             vcs {
                 root(DslContext.settingsRoot)

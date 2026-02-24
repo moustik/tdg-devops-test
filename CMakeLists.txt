@@ -13,7 +13,11 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 add_subdirectory(src/lib)
-add_subdirectory(src/app)
+
+option(BUILD_APP "Build the calculator application" ON)
+if(BUILD_APP)
+    add_subdirectory(src/app)
+endif()
 
 # Testing
 option(BUILD_TESTS "Build unit tests" ON)

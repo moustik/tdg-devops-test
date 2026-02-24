@@ -108,6 +108,8 @@ project {
         }
     }
 
+    cppJob("linux",   "release")
+    cppJob("windows", "release")
     cppJob("linux",   "default")
     cppJob("windows", "default")
     cppJob("linux",   "fixed")

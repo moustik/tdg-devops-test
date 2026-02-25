@@ -2,8 +2,8 @@ import jetbrains.buildServer.configs.kotlin.BuildSteps
 import jetbrains.buildServer.configs.kotlin.buildSteps.script
 
 fun BuildSteps.buildSteps(preset: String, buildDir: String) {
-    // On the default branch (main), discard any restored build cache so every
-    // build is a clean, authoritative compile. Feature branches keep the cache.
+    // On the default branch (main), discard any restored build cache
+    // so we get a clean build. Feature branches keep the cache.
     script {
         name = "[Cache] Discard on default branch (Linux)"
         conditions {

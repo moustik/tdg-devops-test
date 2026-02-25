@@ -9,8 +9,8 @@ version = "2025.11"
 
 fun Project.buildJob(preset: String) {
     buildType {
-        id("cpp_linux_${preset}")
-        name = "C++ CI - %os% ($preset)"
+        id("pipeline_${preset}")
+        name = "Calculator CI - %os% ($preset)"
 
         val buildDir = if (preset == "release") "build-release" else "build"
         artifactRules = """
@@ -28,7 +28,7 @@ fun Project.buildJob(preset: String) {
         }
 
         requirements {
-            contains("teamcity.agent.jvm.os.name", "%os%")
+            contains("teamcity.agent.name", "%os%-Small")
         }
 
         steps {
@@ -42,13 +42,11 @@ fun Project.buildJob(preset: String) {
                     value("Windows")
                 )
                         
-                // instructs TeamCity to place individual builds artifacts under the sub directories corresponding to builds' matrix parameter values
+                // use `os` subdir for artifacts
                 groupArtifactsByBuild = true
             }
 
-            // Cache the build directory (compiled objects + GoogleTest _deps/) per branch.
-            // TC automatically scopes the cache by branch, so main and feature branches
-            // are isolated. publishOnlyChanged avoids redundant uploads on cache hits.
+            // Cache the build directory per branch.
             buildCache {
                 name = "cmake-%os%-${preset}"
                 use = true
@@ -57,6 +55,7 @@ fun Project.buildJob(preset: String) {
                 rules = buildDir
             }
 
+            // Release preset has not tests
             if (preset != "release") {
                 xmlReport {
                     reportType = XmlReport.XmlReportType.JUNIT
